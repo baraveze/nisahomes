@@ -70,11 +70,13 @@
                         if( _multiLevelApprovalSetting != Guid.Empty ) {
 
                             // Step 3: Update Financial Request with the Configuration found and put in True the field that trigger powerautomate approval process 
-                            Target.Attributes.Clear();
-                            Target.Attributes.Add("cr566_relatedmultilevelapprovalsettingid", new EntityReference("cr566_multilevelapprovalsettings", _multiLevelApprovalSetting));
+
+                            Entity FinancialRequestUpdate = new Entity("cr566_financialassistancerequest");
+                            FinancialRequestUpdate.Id = Target.Id;
+                            FinancialRequestUpdate.Attributes.Add("cr566_relatedmultilevelapprovalsettingid", new EntityReference("cr566_multilevelapprovalsettings", _multiLevelApprovalSetting));
                             
                             // Add Logic to establish CC emails
-                            service.Update(Target);
+                            service.Update(FinancialRequestUpdate);
 
 
                         }
