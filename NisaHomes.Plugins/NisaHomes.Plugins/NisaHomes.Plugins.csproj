@@ -91,9 +91,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GetApprover1EmailMultiLevelApprovalSettings.cs" />
+    <Compile Include="GetCCEmailsForNotifications.cs" />
     <Compile Include="GetMultiLevelApprovalSettingRow.cs" />
-    <Compile Include="GetNotifierEmailMultiLevelApprovalSettings.cs" />
     <Compile Include="GetSecondaryApproversEmailsMultiLevelApprovalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries.cs" />
