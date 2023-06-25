@@ -12,21 +12,29 @@
     public class GetMultiLevelApprovalSettingRow : IPlugin
     {   /// <summary>
         /// Assistance Type 
-            ///Rent	734190000
-            ///Food	734190001
-            ///Kitchen supplies	734190002
-            ///Moving truck	734190003
-            ///Necessary furniture	734190004
-            ///Basic Necessities	734190005
-            ///Bill payment	734190006
-            ///Transportation	734190007
-            ///Small debts(payday loans, personal loans)  734190008
-            ///Hotel/motel accommodation	734190009
-            ///Other	734190010
-    /// </summary>
-    /// <param name="serviceProvider"></param>
-    /// <exception cref="InvalidPluginExecutionException"></exception>
-        
+        ///Rent	734190000
+        ///Food	734190001
+        ///Kitchen supplies	734190002
+        ///Moving truck	734190003
+        ///Necessary furniture	734190004
+        ///Basic Necessities	734190005
+        ///Bill payment	734190006
+        ///Transportation	734190007
+        ///Small debts(payday loans, personal loans)  734190008
+        ///Hotel/motel accommodation	734190009
+        ///Other	734190010
+        ///
+        /// Distribution Method:
+        /// Cheque 734190000
+        /// Direct Deposit 734190001
+        /// Bank Draft 734190002
+        /// Electronic Gift Card 734190003
+        /// Vendor 734190004
+        /// Manager CC 734190005
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <exception cref="InvalidPluginExecutionException"></exception>
+
         public void Execute(IServiceProvider serviceProvider)
         {
             ITracingService tracer = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
@@ -61,7 +69,9 @@
                             _totalAmount = FinancialRequest.GetAttributeValue<Money>("cr566_totalamountitems").Value;
                         }
 
-                        if (_totalAmount < 200 && (_assistanceType == 734190007 || _distributionMethod == 734190003))
+                        // Category selection
+                        // If Total amount <= 200 AND (AssistanceTyep = Transportation OR DistributionMethod = Electronic Gift Card OR Manager CC)
+                        if (_totalAmount <= 200 && (_assistanceType == 734190007 || _distributionMethod == 734190003 || _distributionMethod == 734190005))
                         { _selectedCategory = _category1; }
                         else { _selectedCategory = _category2; }
 
