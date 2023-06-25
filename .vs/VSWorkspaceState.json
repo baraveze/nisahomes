@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\NisaHomes.Plugins"
+    "\\NisaHomes.Plugins",
+    "\\NisaHomes.Plugins\\packages"
   ],
   "SelectedNode": "\\NisaHomes.Plugins\\NisaHomes.Plugins.sln",
   "PreviewInSolutionExplorer": false
