@@ -23,6 +23,7 @@
         ///Small debts(payday loans, personal loans)  734190008
         ///Hotel/motel accommodation	734190009
         ///Other	734190010
+        ///Welcome Package	734190011
         ///
         /// Distribution Method:
         /// Cheque 734190000
