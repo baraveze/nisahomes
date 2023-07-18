@@ -73,8 +73,21 @@
                         // Category selection
                         // If Total amount <= 200 AND (AssistanceTyep = Transportation OR DistributionMethod = Electronic Gift Card OR Manager CC)
                         if (_totalAmount <= 200 && (_assistanceType == 734190007 || _distributionMethod == 734190003 || _distributionMethod == 734190005))
-                        { _selectedCategory = _category1; }
-                        else { _selectedCategory = _category2; }
+                        { 
+                           _selectedCategory = _category1; 
+                        }
+                        else 
+                        {
+                            // If total amoutn <= 400 AND Assistance Type == Welcome Package
+                            if (_totalAmount <= 400 && _assistanceType == 734190011)
+                            {
+                                _selectedCategory = _category1;
+                            }
+                            else
+                            {
+                                _selectedCategory = _category2;
+                            }                           
+                        }
 
                         Guid _multiLevelApprovalSetting = getConfiguRowQuery.getMultiLevelApprovalConfiguration(_selectedCategory, _ownerid);
 
