@@ -72,32 +72,28 @@
                         }
 
                         // Category selection
-                        if (_assistanceType == (int)assistanceType.Transportation
-                        || _assistanceType == (int)assistanceType.Food
-                        || _assistanceType == (int)assistanceType.Grocery_Support
-                        || _distributionMethod == (int)distributionMethod.Electronic_Gift_Card
-                        || _distributionMethod == (int)distributionMethod.Physical_Gift_Card
-                        || _distributionMethod == (int)distributionMethod.Manager_CC)
+                        if (_assistanceType == (int)assistanceType.Welcome_Package)
                         {
-                            if (_totalAmount <= 200)
-                            {
-                                _selectedCategory = _category1;
-                            }
-                            else
-                            {
-                                _selectedCategory = _category2;
-                            }
+                            _selectedCategory = _category1;                            
                         }
                         else
                         {
-                            if (_assistanceType == (int)assistanceType.Welcome_Package)
+                            if (_assistanceType == (int)assistanceType.Transportation
+                             || _assistanceType == (int)assistanceType.Food
+                             || _assistanceType == (int)assistanceType.Grocery_Support
+                             || _distributionMethod == (int)distributionMethod.Electronic_Gift_Card
+                             || _distributionMethod == (int)distributionMethod.Physical_Gift_Card
+                             || _distributionMethod == (int)distributionMethod.Manager_CC)
                             {
-                                _selectedCategory = _category1;
-                            }
-                            else
-                            {
-                                _selectedCategory = _category2;
-                            }
+                                if (_totalAmount <= 200)
+                                {
+                                    _selectedCategory = _category1;
+                                }
+                                else 
+                                {
+                                    _selectedCategory = _category2;
+                                }                                
+                            }                          
                         }
 
                         Guid _multiLevelApprovalSetting = getConfiguRowQuery.getMultiLevelApprovalConfiguration(_selectedCategory, _ownerid);
