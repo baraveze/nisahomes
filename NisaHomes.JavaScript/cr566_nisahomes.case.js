@@ -1,83 +1,83 @@
 
-if (typeof (NisaHomes) === "undefined") {
+if (typeof (NisaHomes) === "undefined") 
+{
     NisaHomes = { __namespace: true }
 }
 
-
-
-NisaHomes.Case = {
-    properties: {
+NisaHomes.Case = 
+{
+    properties: 
+    {
         releaseVersion: 1.0,
         CaseTypeName: "",
-        CaseStatus: ""        
+        CaseStatus: "",
+        ApplicationStage:""
     },
-
-
-
 
     //**************************************************
     //* FORM EVENT HANDLERS
     //**************************************************
-
     FormOnLoad: function (executionContext) {
         import("/WebResources/cr566_nisahomes.core.js").then(
-            function () {
+            function () 
+            {
                 //Pass Context to Core Library
                 NisaHomes.Core.InitializeContext(executionContext);
 
                 //Call Business Action
-                NisaHomes.Case.ShowHidePageTabs();
-              
-                
-                /*
-                var cr566_primarysectorLookup = NisaHomes.Core.GetFieldValue("cr566_primarysectorid");
-                if(cr566_primarysectorLookup != null && cr566_primarysectorLookup[0].name === "05 Hospitality + Gaming")
-                    NisaHomes.Core.ShowFormControl("cr566_brandid");
-                else
-                    NisaHomes.Core.HideFormControl("cr566_brandid");
-                        */
+                NisaHomes.Case.ShowHidePageTabs();            
             },
+
             //Error handler
-            function (error) {
+            function (error) 
+            {
                 NisaHomes.Core.AppendErrorLog("FormOnLoad()", error);
             }
         );
     },
 
-
-    CaseTypeOnChange: function (executionContext) {
-
+    CaseTypeOnChange: function (executionContext) 
+    {
         NisaHomes.Case.ShowHidePageTabs();
-
     },
 
-   
-
+    ApplicationStageOnChange: function (executionContext) 
+    {
+        NisaHomes.Case.ShowHidePageTabs();
+    },
     //**************************************************
     //* BUSINESS ACTIONS
     //**************************************************
-
-   
-    ShowHidePageTabs: function () {
-
-
+    ShowHidePageTabs: function () 
+    {
         //get CaseType
         NisaHomes.Case.properties.CaseTypeName = NisaHomes.Core.GetFieldOptionsetText("casetypecode");
+
+        //get Application Stage
+        NisaHomes.Case.properties.ApplicationStage = NisaHomes.Core.GetFieldOptionsetText("dcg_applicationstage");
    
-        //SHOW APPROPRIATE TABS BASED ON CaseTYPE
-      
-
-                if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" ||
-                   NisaHomes.Case.properties.CaseTypeName === "NH Remote"){
-                    NisaHomes.Core.ShowFormTab("TAB_INCOME_VS_EXPENSES");
-                    NisaHomes.Core.ShowFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
-                   }
-                else{
-                    NisaHomes.Core.HideFormTab("TAB_INCOME_VS_EXPENSES");
-                    NisaHomes.Core.HideFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
-                }
+        //SHOW APPROPRIATE TABS BASED ON CaseTYPE     
+        if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" 
+            || NisaHomes.Case.properties.CaseTypeName === "NH Remote")
+        {
+            NisaHomes.Core.ShowFormTab("TAB_INCOME_VS_EXPENSES");
+            NisaHomes.Core.ShowFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
+        }
+        else
+        {
+            NisaHomes.Core.HideFormTab("TAB_INCOME_VS_EXPENSES");
+            NisaHomes.Core.HideFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
+        }
                     
+        // If case type is Residential and Application Stage == Checklist Timeline Show TAB_CHILDCARE_PROGRAM
+        if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" 
+            && NisaHomes.Case.properties.ApplicationStage === "Check List Timeline")
+        {
+            NisaHomes.Core.ShowFormTab("TAB_CHILDCARE_PROGRAM");
+        }
+        else
+        {
+            NisaHomes.Core.HideFormTab("TAB_CHILDCARE_PROGRAM");          
+        }
     }
-
-
 }
