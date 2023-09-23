@@ -17,7 +17,8 @@ NisaHomes.Case =
     //**************************************************
     //* FORM EVENT HANDLERS
     //**************************************************
-    FormOnLoad: function (executionContext) {
+    FormOnLoad: function (executionContext)
+    {
         import("/WebResources/cr566_nisahomes.core.js").then(
             function () 
             {
@@ -32,6 +33,24 @@ NisaHomes.Case =
             function (error) 
             {
                 NisaHomes.Core.AppendErrorLog("FormOnLoad()", error);
+            }
+        );
+    },
+
+    OnSave: function (executionContext)
+    {
+        import("/WebResources/cr566_nisahomes.core.js").then(
+            function () {
+                //Pass Context to Core Library
+                NisaHomes.Core.InitializeContext(executionContext);
+
+                //Call Business Action
+                NisaHomes.Case.ShowHidePageTabs();
+            },
+
+            //Error handler
+            function (error) {
+                NisaHomes.Core.AppendErrorLog("OnSave()", error);
             }
         );
     },
@@ -78,6 +97,54 @@ NisaHomes.Case =
         else
         {
             NisaHomes.Core.HideFormTab("TAB_CHILDCARE_PROGRAM");          
+        }
+
+        if (NisaHomes.Case.properties.ApplicationStage === "Waitlist")
+        {
+            NisaHomes.Core.HideFormTab("TAB_RINA");    
+            NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
+            NisaHomes.Core.HideFormTab("TAB_SUPPORT");
+            NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
+        }
+        else
+        {
+            if (NisaHomes.Case.properties.ApplicationStage === "Remote")
+            {
+                NisaHomes.Core.ShowFormTab("TAB_RINA");
+                NisaHomes.Core.ShowFormTab("TAB_REMOTE_PROGRAM");
+                NisaHomes.Core.ShowFormTab("TAB_SUPPORT");
+                NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
+                
+                let rinaFinished = NisaHomes.Core.GetFieldValue("cr566_remoteintakeneedsassessmentfinished");
+                let remoteProgramFinished = NisaHomes.Core.GetFieldValue("cr566_remoteprogramfinished");
+                let supportFinished = NisaHomes.Core.GetFieldValue("cr566_supportstagefinished");
+                let wrapUpFinished = NisaHomes.Core.GetFieldValue("cr566_wrapupstagefinished");
+
+                if (rinaFinished === true) {
+                    NisaHomes.Core.ShowFormTab("TAB_REMOTE_PROGRAM");
+                }
+                else {
+                    NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
+                }
+
+                if (remoteProgramFinished === true) {
+                    NisaHomes.Core.ShowFormTab("TAB_SUPPORT");
+                }
+                else {
+                    NisaHomes.Core.HideFormTab("TAB_SUPPORT");
+                }
+
+                if (supportFinished === true) {
+                    NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
+                }
+                else {
+                    NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
+                }
+
+            }
+
+           
+            
         }
     }
 }
