@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\NisaHomes.Plugins",
+    "\\NisaHomes.Plugins\\NisaHomes.Plugins"
   ],
-  "SelectedNode": "\\NisaHomes.Action.sln",
+  "SelectedNode": "\\NisaHomes.Plugins\\NisaHomes.Plugins\\GetMultiLevelApprovalSettingRow.cs",
   "PreviewInSolutionExplorer": false
 }

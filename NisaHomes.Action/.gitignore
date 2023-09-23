@@ -25,6 +25,7 @@
     *.pyc
     *.xml
     *.vsdix
+    .vs/
     ipch/
     obj/
     [Bb]in
