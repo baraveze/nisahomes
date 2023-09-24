@@ -73,7 +73,7 @@ NisaHomes.Case =
         NisaHomes.Case.properties.CaseTypeName = NisaHomes.Core.GetFieldOptionsetText("casetypecode");
 
         //get Application Stage
-        NisaHomes.Case.properties.ApplicationStage = NisaHomes.Core.GetFieldOptionsetText("dcg_applicationstage");
+        let incidentApplicationStage = NisaHomes.Core.GetFieldOptionsetText("dcg_applicationstage");
    
         //SHOW APPROPRIATE TABS BASED ON CaseTYPE     
         if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" 
@@ -90,7 +90,7 @@ NisaHomes.Case =
                     
         // If case type is Residential and Application Stage == Checklist Timeline Show TAB_CHILDCARE_PROGRAM
         if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" 
-            && NisaHomes.Case.properties.ApplicationStage === "Check List Timeline")
+            && incidentApplicationStage === "Check List Timeline")
         {
             NisaHomes.Core.ShowFormTab("TAB_CHILDCARE_PROGRAM");
         }
@@ -99,22 +99,32 @@ NisaHomes.Case =
             NisaHomes.Core.HideFormTab("TAB_CHILDCARE_PROGRAM");          
         }
 
-        if (NisaHomes.Case.properties.ApplicationStage === "Waitlist")
+        switch (incidentApplicationStage)
         {
-            NisaHomes.Core.HideFormTab("TAB_RINA");    
-            NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
-            NisaHomes.Core.HideFormTab("TAB_SUPPORT");
-            NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
-        }
-        else
-        {
-            if (NisaHomes.Case.properties.ApplicationStage === "Remote")
-            {
+            case "Inquiry":
+                NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
+                NisaHomes.Core.HideFormTab("TAB_WAITLIST");
+                NisaHomes.Core.HideFormTab("TAB_RINA");
+                NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
+                NisaHomes.Core.HideFormTab("TAB_SUPPORT");
+                NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
+                break;
+
+            case "Waitlist":
+                NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
+                NisaHomes.Core.HideFormTab("TAB_RINA");
+                NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
+                NisaHomes.Core.HideFormTab("TAB_SUPPORT");
+                NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
+                break;
+
+            case "Remote":
+
                 NisaHomes.Core.ShowFormTab("TAB_RINA");
                 NisaHomes.Core.ShowFormTab("TAB_REMOTE_PROGRAM");
                 NisaHomes.Core.ShowFormTab("TAB_SUPPORT");
                 NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
-                
+
                 let rinaFinished = NisaHomes.Core.GetFieldValue("cr566_remoteintakeneedsassessmentfinished");
                 let remoteProgramFinished = NisaHomes.Core.GetFieldValue("cr566_remoteprogramfinished");
                 let supportFinished = NisaHomes.Core.GetFieldValue("cr566_supportstagefinished");
@@ -141,10 +151,9 @@ NisaHomes.Case =
                     NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
                 }
 
-            }
+                break;
 
-           
-            
         }
+
     }
 }
