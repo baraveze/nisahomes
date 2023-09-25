@@ -30,6 +30,14 @@
         Physical_Gift_Card = 734190004,
         Manager_CC = 734190005
     }
+
+    public class ApprovalCategoryType
+    {
+       public int category;
+       public int approvalType;
+         
+    }
+
     public class GetMultiLevelApprovalSettingRow : IPlugin
     {   /// <summary>  
         /// </summary>
@@ -45,58 +53,41 @@
             Entity Target = (Entity)context.InputParameters["Target"];      
 
             try
-            {
+            {                
                 //If status code is equal to Pending Approval
                 if (Target.Contains("statuscode") && Target.GetAttributeValue<OptionSetValue>("statuscode").Value == 734190000)  
                 {
                     
-                    // Step 1: Validate if we have all necessary fields: caseworker / Assistance Type / Distribution method / Total Amount
+                    // Step 1: Validate if we have all necessary fields: Assistance Type / Total Amount
                     Entity FinancialRequest = service.Retrieve("cr566_financialassistancerequest", Target.Id, new ColumnSet("cr566_assistancetype", "cr566_distributionmethod", "cr566_totalamountitems", "ownerid"));
+                   
                     if (FinancialRequest != null 
-                     && FinancialRequest.GetAttributeValue<OptionSetValue>("cr566_assistancetype") != null 
-                     && FinancialRequest.GetAttributeValue<OptionSetValue>("cr566_distributionmethod") != null 
-                     && FinancialRequest.GetAttributeValue<EntityReference>("ownerid") != null)
+                     && FinancialRequest.GetAttributeValue<OptionSetValue>("cr566_assistancetype") != null )                    
                     {
-                        // Step 2: Establish the Category of the request we are looking for
+                        // Step 2: Search Category and Approval type of the request we are looking for
                         int _assistanceType     = FinancialRequest.GetAttributeValue<OptionSetValue>("cr566_assistancetype").Value;
-                        int _distributionMethod = FinancialRequest.GetAttributeValue<OptionSetValue>("cr566_distributionmethod").Value;
-                        int _category1 = 734190000;
-                        int _category2 = 734190001;
-                        int _selectedCategory = 0;
-                        Guid _ownerid = FinancialRequest.GetAttributeValue<EntityReference>("ownerid").Id;
+                         
+                        //int _category1 = 734190000;
+                        //int _category2 = 734190001;
+                        //int _selectedCategory = 0;
+                        //Guid _ownerid = FinancialRequest.GetAttributeValue<EntityReference>("ownerid").Id;
                         Decimal _totalAmount = 0;
                         Queries getConfiguRowQuery = new Queries(service);
+
                         if (FinancialRequest.GetAttributeValue<Money>("cr566_totalamountitems") != null) 
                         {
                             _totalAmount = FinancialRequest.GetAttributeValue<Money>("cr566_totalamountitems").Value;
                         }
 
                         // Category selection
-                        if (_assistanceType == (int)assistanceType.Welcome_Package)
+                        ApprovalCategoryType approvalFlowType = getConfiguRowQuery.getApprovalFlowLogic(_assistanceType, _totalAmount);
+                        if (approvalFlowType == null)
                         {
-                            _selectedCategory = _category1;                            
-                        }
-                        else
-                        {
-                            if (_assistanceType == (int)assistanceType.Transportation
-                             || _assistanceType == (int)assistanceType.Food
-                             || _assistanceType == (int)assistanceType.Grocery_Support
-                             || _distributionMethod == (int)distributionMethod.Electronic_Gift_Card
-                             || _distributionMethod == (int)distributionMethod.Physical_Gift_Card
-                             || _distributionMethod == (int)distributionMethod.Manager_CC)
-                            {
-                                if (_totalAmount <= 200)
-                                {
-                                    _selectedCategory = _category1;
-                                }
-                                else 
-                                {
-                                    _selectedCategory = _category2;
-                                }                                
-                            }                          
+                            throw new InvalidPluginExecutionException("It does not exist a combination for the Assistance Type and amount provided. " +
+                            "Please, check configuration on \"Approval Flow Logic Assignment\" table.");
                         }
 
-                        Guid _multiLevelApprovalSetting = getConfiguRowQuery.getMultiLevelApprovalConfiguration(_selectedCategory, _ownerid);
+                        Guid _multiLevelApprovalSetting = getConfiguRowQuery.getMultiLevelApprovalConfiguration(approvalFlowType.category, approvalFlowType.approvalType);
 
                         if( _multiLevelApprovalSetting != Guid.Empty ) 
                         {
@@ -109,23 +100,14 @@
                             service.Update(FinancialRequestUpdate);
                         }
                         else 
-                        {
-                            string categoryString = "Category 1";
-                            if (_selectedCategory != 734190000) 
-                            { 
-                                categoryString = "Category 2"; 
-                            }
-
-                            Entity caseworker = service.Retrieve("systemuser", _ownerid, new ColumnSet("fullname"));
-                            string caseworkername = caseworker.GetAttributeValue<String>("fullname");
-                            throw new InvalidPluginExecutionException($"You can not complete this task because any Multi-Level Approval Setting was found with this combination of Case Worker: {caseworkername} and Category: {categoryString}."+
-                                " Please, contact a System Administrator to include this configuration. Then try this action again.");
+                        {                         
+                            throw new InvalidPluginExecutionException($"You can not complete this action because any Multi-Level Approval Setting was found based on Category and Approval Type. Contact an Administrator to checkout configuration.");
                         }
                     }
                     else 
                     {
                         throw new InvalidPluginExecutionException("Empty values. There are important fields without value. Please check into Financial Assistance Request record and" +
-                                                                   "see if Assistance Type, Distribution Method, Caseworker has value");
+                                                                   "see if Assistance Type has value.");
                     }
                 }
             }
