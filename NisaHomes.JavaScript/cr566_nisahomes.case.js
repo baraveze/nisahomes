@@ -70,8 +70,8 @@ NisaHomes.Case =
     ShowHidePageTabs: function () 
     {
         // Hide all by default
-        NisaHomes.Core.HideFormTab("TAB_INQUIRY");
-        NisaHomes.Core.HideFormTab("TAB_WAITLIST");
+        NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
+        NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
         NisaHomes.Core.HideFormTab("TAB_RINA");
         NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
         NisaHomes.Core.HideFormTab("TAB_SUPPORT");
@@ -91,62 +91,28 @@ NisaHomes.Case =
         {
             NisaHomes.Core.ShowFormTab("TAB_INCOME_VS_EXPENSES");
             NisaHomes.Core.ShowFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
+        }
+        else {
+            NisaHomes.Core.HideFormTab("TAB_INCOME_VS_EXPENSES");
+            NisaHomes.Core.HideFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
+        }
 
-            if (NisaHomes.Case.properties.CaseTypeName === "NH Remote")
-            {
-                switch (incidentApplicationStage)
-                {
-                    case "Inquiry":
-                        NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
+           
+        switch (incidentApplicationStage)
+        {
+            case "Inquiry":
+                NisaHomes.Core.HideFormTab("TAB_WAITLIST");
                      
-                        break;
+                break;
 
-                    case "Waitlist":
-                        NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
-                        NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
-                     
-                        break;
+            case "Waitlist":
+                // No action                     
+                break;
 
-                    case "Remote":
-                        NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
-                        NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
-                        NisaHomes.Core.ShowFormTab("TAB_RINA");
-                        
-                        let rinaFinished = NisaHomes.Core.GetFieldValue("cr566_remoteintakeneedsassessmentfinished");
-                        let remoteProgramFinished = NisaHomes.Core.GetFieldValue("cr566_remoteprogramfinished");
-                        let supportFinished = NisaHomes.Core.GetFieldValue("cr566_supportstagefinished");
-                        let wrapUpFinished = NisaHomes.Core.GetFieldValue("cr566_wrapupstagefinished");
+            case "Check List Timeline":
 
-                        if (rinaFinished === true) {
-                            NisaHomes.Core.ShowFormTab("TAB_REMOTE_PROGRAM");
-                        }
-                        else {
-                            NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
-                        }
-
-                        if (remoteProgramFinished === true) {
-                            NisaHomes.Core.ShowFormTab("TAB_SUPPORT");
-                        }
-                        else {
-                            NisaHomes.Core.HideFormTab("TAB_SUPPORT");
-                        }
-
-                        if (supportFinished === true) {
-                            NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
-                        }
-                        else {
-                            NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
-                        }
-
-                        break;
-                }
-
-            }
-            else
-            {
                 // If case type is Residential and Application Stage == Checklist Timeline Show TAB_CHILDCARE_PROGRAM
-                if (NisaHomes.Case.properties.CaseTypeName === "NH Residential"
-                    && incidentApplicationStage === "Check List Timeline")
+                if (NisaHomes.Case.properties.CaseTypeName === "NH Residential")
                 {
                     NisaHomes.Core.ShowFormTab("TAB_CHILDCARE_PROGRAM");
                 }
@@ -154,13 +120,48 @@ NisaHomes.Case =
                 {
                     NisaHomes.Core.HideFormTab("TAB_CHILDCARE_PROGRAM");
                 }
+                break;
 
-            }
-        }
-        else
-        {
-            NisaHomes.Core.HideFormTab("TAB_INCOME_VS_EXPENSES");
-            NisaHomes.Core.HideFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
-        }
+            case "Remote":
+
+                if (NisaHomes.Case.properties.CaseTypeName === "NH Remote")
+                {
+                    NisaHomes.Core.ShowFormTab("TAB_RINA");
+
+                    let rinaFinished = NisaHomes.Core.GetFieldValue("cr566_remoteintakeneedsassessmentfinished");
+                    let remoteProgramFinished = NisaHomes.Core.GetFieldValue("cr566_remoteprogramfinished");
+                    let supportFinished = NisaHomes.Core.GetFieldValue("cr566_supportstagefinished");
+                    let wrapUpFinished = NisaHomes.Core.GetFieldValue("cr566_wrapupstagefinished");
+
+                    if (rinaFinished === true)
+                    {
+                        NisaHomes.Core.ShowFormTab("TAB_REMOTE_PROGRAM");
+                    }
+                    else
+                    {
+                        NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
+                    }
+
+                    if (remoteProgramFinished === true)
+                    {
+                        NisaHomes.Core.ShowFormTab("TAB_SUPPORT");
+                    }
+                    else
+                    {
+                        NisaHomes.Core.HideFormTab("TAB_SUPPORT");
+                    }
+
+                    if (supportFinished === true)
+                    {
+                        NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
+                    }
+                    else
+                    {
+                        NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
+                    }
+                }
+                break;
+        }            
+       
     }
 }
