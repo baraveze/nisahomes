@@ -70,8 +70,8 @@ NisaHomes.Case =
     ShowHidePageTabs: function () 
     {
         // Hide all by default
-        NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
-        NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
+        NisaHomes.Core.HideFormTab("TAB_INQUIRY");
+        NisaHomes.Core.HideFormTab("TAB_WAITLIST");
         NisaHomes.Core.HideFormTab("TAB_RINA");
         NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
         NisaHomes.Core.HideFormTab("TAB_SUPPORT");
@@ -89,6 +89,8 @@ NisaHomes.Case =
         // SHOW APPROPRIATE TABS BASED ON CaseTYPE     
         if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" || NisaHomes.Case.properties.CaseTypeName === "NH Remote")
         {
+            NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
+            NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
             NisaHomes.Core.ShowFormTab("TAB_INCOME_VS_EXPENSES");
             NisaHomes.Core.ShowFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
         }
@@ -110,6 +112,7 @@ NisaHomes.Case =
                 break;
 
             case "Check List Timeline":
+            case "Move Out":
 
                 // If case type is Residential and Application Stage == Checklist Timeline Show TAB_CHILDCARE_PROGRAM
                 if (NisaHomes.Case.properties.CaseTypeName === "NH Residential")

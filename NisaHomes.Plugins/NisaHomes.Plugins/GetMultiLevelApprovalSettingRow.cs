@@ -70,7 +70,7 @@
                         //int _category1 = 734190000;
                         //int _category2 = 734190001;
                         //int _selectedCategory = 0;
-                        //Guid _ownerid = FinancialRequest.GetAttributeValue<EntityReference>("ownerid").Id;
+                        Guid caseWorker = FinancialRequest.GetAttributeValue<EntityReference>("ownerid").Id;
                         Decimal _totalAmount = 0;
                         Queries getConfiguRowQuery = new Queries(service);
 
@@ -87,21 +87,24 @@
                             "Please, check configuration on \"Approval Flow Logic Assignment\" table.");
                         }
 
-                        Guid _multiLevelApprovalSetting = getConfiguRowQuery.getMultiLevelApprovalConfiguration(approvalFlowType.category, approvalFlowType.approvalType);
-
-                        if( _multiLevelApprovalSetting != Guid.Empty ) 
+                        Guid _multiLevelApprovalSetting = getConfiguRowQuery.getMultiLevelApprovalConfiguration(approvalFlowType.approvalType, caseWorker);
+                        
+                        if ( _multiLevelApprovalSetting != Guid.Empty ) 
                         {
                             // Step 3: Update Financial Request with the Configuration found and put in True the field that trigger powerautomate approval process 
                             Entity FinancialRequestUpdate = new Entity("cr566_financialassistancerequest");
                             FinancialRequestUpdate.Id = Target.Id;
                             FinancialRequestUpdate.Attributes.Add("cr566_relatedmultilevelapprovalsettingid", new EntityReference("cr566_multilevelapprovalsettings", _multiLevelApprovalSetting));
-                            
+                            FinancialRequestUpdate.Attributes.Add("cr566_category", new OptionSetValue(approvalFlowType.category));
+                            FinancialRequestUpdate.Attributes.Add("cr566_approvaltype", new OptionSetValue(approvalFlowType.approvalType));
+
                             // Add Logic to establish CC emails
                             service.Update(FinancialRequestUpdate);
                         }
                         else 
                         {                         
-                            throw new InvalidPluginExecutionException($"You can not complete this action because any Multi-Level Approval Setting was found based on Category and Approval Type. Contact an Administrator to checkout configuration.");
+                            throw new InvalidPluginExecutionException($"You can not complete this action because any Multi-Level Approval Setting was found related to your user based on Assistance Type and amount set in this request. " +
+                                $"Contact an Administrator and provide this error message.");
                         }
                     }
                     else 

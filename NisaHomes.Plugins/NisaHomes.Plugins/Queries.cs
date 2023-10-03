@@ -93,6 +93,49 @@ namespace NisaHomes.Plugins
                 throw new InvalidPluginExecutionException("Internal query getApprovalFlowLogic: " + ex.Message);
             }
         }
+        public Guid getMultiLevelApprovalConfiguration(int approvalType, Guid caseworker)
+        {
+
+            string query = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>" +
+                            "<entity name='cr566_multilevelapprovalsettings'>" +
+                            "<attribute name='cr566_multilevelapprovalsettingsid' />" +
+                            "<attribute name='cr566_name' />" +
+                            "<order attribute='cr566_name' descending='false' />" +
+                            "<filter type='and'>" +
+                                "<condition attribute='cr566_caseworkerid' operator='eq' value='{" + caseworker + "}' />" +
+                                 "<condition attribute='cr566_approvaltype' operator='eq' value='" + approvalType + "' />" +
+                            "</filter>" +
+                            "</entity>" +
+                        "</fetch>";
+            try
+            {
+                EntityCollection queryCollection = _service.RetrieveMultiple(new FetchExpression(query));
+                if (queryCollection.Entities.Count > 0)
+                {
+                    if (queryCollection.Entities.Count > 1)
+                    {
+                        throw new InvalidPluginExecutionException("Please, check configuration on \"Multi-level Approval Setting\" table. there are more than one combination for Assystance Type and Approval type." +
+                             "So the process cannot pick an unique value to find appropriate Multi-level Approval Setting.");
+                    }
+                    return queryCollection.Entities[0].Id;
+                }
+                return Guid.Empty;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidPluginExecutionException("Query getMultiLevelApprovalConfiguration: " + ex.Message);
+            }
+
+
+        }
+        /// <summary>
+        /// Deprecated method
+        /// <remarks>Deprecated method since new logic in the process. But will remain in the source if we need to retake this way again.</remarks>
+        /// </summary>
+        /// <param name="category"></param>
+        /// <param name="approvalType"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidPluginExecutionException"></exception>
         public Guid getMultiLevelApprovalConfiguration( int category, int approvalType) {
 
             string query = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>"+
