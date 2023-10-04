@@ -60,6 +60,10 @@ NisaHomes.Case =
         NisaHomes.Case.ShowHidePageTabs();
     },
 
+    OnChange: function (executionContext) {
+        NisaHomes.Case.ShowHidePageTabs();
+    },
+
     ApplicationStageOnChange: function (executionContext) 
     {
         NisaHomes.Case.ShowHidePageTabs();
