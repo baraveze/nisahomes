@@ -135,6 +135,8 @@ NisaHomes.Case =
                     NisaHomes.Core.ShowFormTab("TAB_RINA");
 
                     let rinaFinished = NisaHomes.Core.GetFieldValue("cr566_remoteintakeneedsassessmentfinished");
+                    let remoteProgramFinished = NisaHomes.Core.GetFieldValue("cr566_remoteprogramfinished");
+
                     
                     if (rinaFinished === true)
                     {
@@ -146,6 +148,14 @@ NisaHomes.Case =
                         NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
                         NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
                     }
+
+                    if (remoteProgramFinished === true) {
+                        NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
+                    }
+                    else {
+                        NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
+                    }
+
                 }
                 break;
         }            
