@@ -1,5 +1,3 @@
-
-
 if (typeof (NisaHomes) === "undefined") {
     NisaHomes = { __namespace: true }
 }
@@ -29,8 +27,6 @@ NisaHomes.Core = {
         _properties.APIUrl = NisaHomes.Core.RetrieveAPIUrl();
 
     },
-
-
 
 
     //**************************************************

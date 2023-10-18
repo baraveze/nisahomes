@@ -78,7 +78,6 @@ NisaHomes.Case =
         NisaHomes.Core.HideFormTab("TAB_WAITLIST");
         NisaHomes.Core.HideFormTab("TAB_RINA");
         NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
-        NisaHomes.Core.HideFormTab("TAB_SUPPORT");
         NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
         NisaHomes.Core.HideFormTab("TAB_INCOME_VS_EXPENSES");
         NisaHomes.Core.HideFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
@@ -136,34 +135,15 @@ NisaHomes.Case =
                     NisaHomes.Core.ShowFormTab("TAB_RINA");
 
                     let rinaFinished = NisaHomes.Core.GetFieldValue("cr566_remoteintakeneedsassessmentfinished");
-                    let remoteProgramFinished = NisaHomes.Core.GetFieldValue("cr566_remoteprogramfinished");
-                    let supportFinished = NisaHomes.Core.GetFieldValue("cr566_supportstagefinished");
-                    let wrapUpFinished = NisaHomes.Core.GetFieldValue("cr566_wrapupstagefinished");
-
+                    
                     if (rinaFinished === true)
                     {
                         NisaHomes.Core.ShowFormTab("TAB_REMOTE_PROGRAM");
-                    }
-                    else
-                    {
-                        NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
-                    }
-
-                    if (remoteProgramFinished === true)
-                    {
-                        NisaHomes.Core.ShowFormTab("TAB_SUPPORT");
-                    }
-                    else
-                    {
-                        NisaHomes.Core.HideFormTab("TAB_SUPPORT");
-                    }
-
-                    if (supportFinished === true)
-                    {
                         NisaHomes.Core.ShowFormTab("TAB_WRAP_UP");
                     }
                     else
                     {
+                        NisaHomes.Core.HideFormTab("TAB_REMOTE_PROGRAM");
                         NisaHomes.Core.HideFormTab("TAB_WRAP_UP");
                     }
                 }
