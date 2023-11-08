@@ -91,11 +91,16 @@ NisaHomes.Case =
    
         // SHOW APPROPRIATE TABS BASED ON CaseTYPE     
         if(NisaHomes.Case.properties.CaseTypeName === "NH Residential" || NisaHomes.Case.properties.CaseTypeName === "NH Remote")
-        {
-            NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
-            NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
+        {           
             NisaHomes.Core.ShowFormTab("TAB_INCOME_VS_EXPENSES");
             NisaHomes.Core.ShowFormTab("TAB_FINANCIAL_ASSISTANCE_REQUEST");
+
+            if (NisaHomes.Case.properties.CaseTypeName === "NH Remote")
+            {
+                NisaHomes.Core.ShowFormTab("TAB_INQUIRY");
+                NisaHomes.Core.ShowFormTab("TAB_WAITLIST");
+            }
+
         }
         else {
             NisaHomes.Core.HideFormTab("TAB_INCOME_VS_EXPENSES");
